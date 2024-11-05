@@ -92,6 +92,7 @@ export default function Home() {
   };
 
   function filterHandle(type) {
+    setPage(1)
     setFilter(type)
     setIsFilter(false)
   }
