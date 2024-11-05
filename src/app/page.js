@@ -23,47 +23,50 @@ export default function Home() {
   
   useEffect(() => {
     setIsLoading(true)
-    const fetchDataSocket = () => {
-      try {
-        socket = io("http://localhost:8000");
+
+    // const fetchDataSocket = () => {
+    //   try {
+    //     socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
   
-        socket.on("notification:list", (message) => {
-          setData(message);
-          setTableList(message.data);
-        });
+    //     socket.on("notification:list", (message) => {
+    //       setData(message);
+    //       setTableList(message.data);
+    //     });
   
-        return () => {
-          socket.disconnect();
-        };
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
+    //     return () => {
+    //       socket.disconnect();
+    //     };
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+
     const fetchData = async () => {
       try {
         const filterValid = filter == 'all' ? '' : filter
-        const response = await FetchNotifications.getAll(searchValue, page, filterValid);
-        setData(response);
-        setTableList(response.data);
+        const result = await FetchNotifications.getAll(searchValue, page, filterValid);
+        setData(result);
+        setTableList(result.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false)
       }
     };
-  
-    if (!searchValue && page === 1 && filter == 'all') {
-      fetchDataSocket();
-    } else {
-      fetchData();
-    }
 
-    setIsLoading(false)
+    fetchData()
   
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+    // if (!searchValue && page === 1 && filter == 'all') {
+    //   fetchDataSocket();
+    // } else {
+    //   fetchData();
+    // }
+  
+    // return () => {
+    //   if (socket) {
+    //     socket.disconnect();
+    //   }
+    // };
   }, [searchValue, page, filter]);
 
   function nextPage() {
@@ -76,10 +79,11 @@ export default function Home() {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
+      setPage(1)
       setSearchValue(search);
-    } /* else if (e.key === "Backspace" && search.length === 1) {
+    } else if (e.key === "Backspace" && search.length === 1 && searchValue != '') {
       setSearchValue("");
-    } */
+    }
   };
 
   const handleChange = (e) => {
@@ -103,11 +107,11 @@ export default function Home() {
   return (
     <>
       <div className="w-screen h-screen flex bg-privy-dark-50 text-privy-dark-950">
-        <div className="w-2/12">
+        <div className=" w-3/12 xl:w-2/12">
           <Aside>
           </Aside>
         </div>
-          <div className="w-10/12 p-8">
+          <div className="w-19/12 xl:w-10/12 p-8">
               <div className="w-full h-full flex flex-col gap-8">
                 <div className="w-full flex items-center justify-between">
                   <div className="w-1/2 h-10 rounded-full bg-white flex justify-start items-center relative">
@@ -162,7 +166,13 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                  <div className="w-full h-full flex flex-col gap-3">
+                {isLoading && (
+                  <div className="w-full h-full">
+                      <Loading></Loading>
+                  </div>
+                )}
+                {!isLoading && (
+                 <div className="w-full h-full flex flex-col gap-3">
                     <div className="w-full max-h-[500px]">
                       <NotificationTable data={tableList}></NotificationTable>
                     </div>
@@ -185,7 +195,8 @@ export default function Home() {
                       </button>
                       <p className="absolute right-0">Show {tableList.length} out of {data.totalData} results</p>
                     </div>
-                  </div>
+                  </div> 
+                )}
               </div>
           </div>
       </div>

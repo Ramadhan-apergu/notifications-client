@@ -24,13 +24,13 @@ export default function NotificationTable({ data }) {
                         <div className={`grid grid-cols-12 h-11 px-1 gap-2 ${i % 2 == 0 ? 'bg-gray-50' : 'bg-white'}`} key={i}>
                             <div className="col-span-2 flex justify-start items-center pl-3 py-2">
                                 {item.type == 'error' && (
-                                    <p className="truncate w-1/2 text-center bg-red-200 text-red-500 h-full rounded-full border border-red-500 capitalize">{item.type}</p>
+                                    <p className="truncate w-full xl:w-2/3 text-center bg-red-200 text-red-500 h-full rounded-full border border-red-500 capitalize">{item.type}</p>
                                 )}
                                 {item.type == 'success' && (
-                                    <p className="truncate w-1/2 text-center bg-green-200 text-green-600 h-full rounded-full border border-green-600 capitalize">{item.type}</p>
+                                    <p className="truncate w-full xl:w-2/3 text-center bg-green-200 text-green-600 h-full rounded-full border border-green-600 capitalize">{item.type}</p>
                                 )}
                                 {item.type == 'waiting' && (
-                                    <p className="truncate w-1/2 text-center bg-yellow-200 text-yellow-600 h-full rounded-full border border-yellow-600 capitalize">{item.type}</p>
+                                    <p className="truncate w-full xl:w-2/3 text-center bg-yellow-200 text-yellow-600 h-full rounded-full border border-yellow-600 capitalize">{item.type}</p>
                                 )}
                             </div>
                             <div className="col-span-2 flex justify-start items-center pl-3">
