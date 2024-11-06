@@ -4,8 +4,8 @@ export default function NotificationTable({ data, onDataSend }) {
     };
     
     return (
-        <div className="w-full max-h-full border divide-y rounded-lg overflow-hidden bg-white overflow-y-auto">
-            <div className="grid grid-cols-12 gap-2 h-11 px-1 sticky top-0 bg-white z-10">
+        <div className="w-full max-h-full border rounded-lg overflow-hidden bg-white overflow-y-auto">
+            <div className="grid grid-cols-12 gap-2 h-11 px-1 sticky top-0 bg-white z-10 border-b shadow-sm">
                 <div className="col-span-1 flex justify-start items-center font-semibold pl-3">
                     <p>Type</p>
                 </div>
@@ -27,7 +27,7 @@ export default function NotificationTable({ data, onDataSend }) {
                     {data.map((item, i) => (
                         <div
                         onClick={() => {sendDataToParent(item.id)}}
-                        className={`grid grid-cols-12 h-11 px-1 gap-2 ${i % 2 == 0 ? 'bg-gray-50' : 'bg-white'} cursor-pointer hover:bg-privy-red-100/70 active:bg-privy-red-100 duration-75`} key={i}>
+                        className={`grid grid-cols-12 h-11 px-1 gap-2 ${i % 2 == 0 ? 'bg-gray-50' : 'bg-white'} cursor-pointer hover:bg-privy-red-100/70 active:bg-privy-red-100 duration-75 border-b`} key={i}>
                             <div className="col-span-1 flex justify-start items-center pl-3 py-2 text-sm">
                                 {item.type == 'error' && (
                                     <p className="truncate w-full text-center flex items-center justify-center bg-red-200 text-red-500 h-full rounded-full border border-red-500 capitalize">{item.type}</p>
