@@ -20,6 +20,8 @@ export default function Home() {
   const [filter, setFilter] = useState('all')
   const [isFilter, setIsFilter] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isModal, setIsModal] = useState(false)
+  const [dataModal, setDataModal] = useState({})
   
   useEffect(() => {
     setIsLoading(true)
@@ -38,6 +40,8 @@ export default function Home() {
     //     };
     //   } catch (error) {
     //     console.log(error);
+    //   } finally {
+    //     setIsLoading(false)
     //   }
     // };
 
@@ -105,14 +109,20 @@ export default function Home() {
     setIsFilter(false)
   }
 
+  function handleDataFromTable(id) {
+    const dataModal = tableList.find(item => item.id == id)
+    setDataModal(dataModal)
+    setIsModal(true)
+  }
+
   return (
     <>
-      <div className="w-screen h-screen flex bg-privy-dark-50 text-privy-dark-950">
-        <div className=" w-3/12 xl:w-2/12">
+      <div className="w-screen h-screen flex bg-privy-dark-50 text-privy-dark-950 relative">
+        {/* <div className=" w-3/12 xl:w-2/12">
           <Aside>
           </Aside>
-        </div>
-          <div className="w-19/12 xl:w-10/12 p-8">
+        </div> */}
+          <div className="w-full p-8">
               <div className="w-full h-full flex flex-col gap-8">
                 <div className="w-full flex items-center justify-between">
                   <div className="w-1/2 h-10 rounded-full bg-white flex justify-start items-center relative">
@@ -150,7 +160,7 @@ export default function Home() {
                       <p>{filter}</p>
                     </button>
                     {isFilter && (
-                      <div className="absolute top-9 right-0 rounded-md overflow-hidden divide-y border shadow-md bg-white">
+                      <div className="absolute top-9 right-0 rounded-md overflow-hidden divide-y border shadow-md bg-white z-20">
                         <div onClick={() => {filterHandle('all')}} className="px-3 py-1 text-center bg-white cursor-pointer hover:bg-privy-red-600 hover:text-white capitalize duration-100">
                           <p>all</p>
                         </div>
@@ -175,7 +185,7 @@ export default function Home() {
                 {!isLoading && (
                  <div className="w-full h-full flex flex-col gap-3">
                     <div className="w-full max-h-[500px]">
-                      <NotificationTable data={tableList}></NotificationTable>
+                      <NotificationTable data={tableList} onDataSend={handleDataFromTable}></NotificationTable>
                     </div>
                     <div className="w-full flex justify-center items-center gap-2 relative">
                       <button 
@@ -200,6 +210,58 @@ export default function Home() {
                 )}
               </div>
           </div>
+          {isModal && dataModal && (
+            <div 
+            id="id_modal"
+            onClick={(e) => {if (e.target.id == 'id_modal') {setIsModal(false); setDataModal({})}}}
+            className="w-full h-full flex justify-center items-center absolute top-0 left-0 z-30 bg-privy-dark-800 bg-opacity-20">
+              <div className="p-5 w-1/2 max-h-[400px] bg-white rounded-md border shadow-md z-40">
+                  <div className="w-full h-full flex flex-col gap-2">
+                    <div className="w-full flex justify-center items-start">
+                      <div className="w-1/6 p-1 font-semibold">
+                        <p>Type :</p>
+                      </div>
+                      <div className="w-5/6 p-1 bg-privy-dark-50 rounded-md border capitalize">
+                        <p>{dataModal.type}</p>
+                      </div>
+                    </div>
+                    <div className="w-full flex justify-center items-start">
+                      <div className="w-1/6 p-1 font-semibold">
+                        <p>Name :</p>
+                      </div>
+                      <div className="w-5/6 p-1 bg-privy-dark-50 rounded-md border">
+                        <p>{dataModal.name}</p>
+                      </div>
+                    </div>
+                    <div className="w-full flex justify-center items-start">
+                      <div className="w-1/6 p-1 font-semibold">
+                        <p>Source :</p>
+                      </div>
+                      <div className="w-5/6 p-1 bg-privy-dark-50 rounded-md border">
+                        <p>{dataModal.source}</p>
+                      </div>
+                    </div>
+                    <div className="w-full flex justify-center items-start">
+                      <div className="w-1/6 p-1 font-semibold">
+                        <p>Date :</p>
+                      </div>
+                      <div className="w-5/6 p-1 bg-privy-dark-50 rounded-md border">
+                        <p>{dataModal.datetime.slice(0, -5).split('T')[0].split('-').reverse().join('-')} | {dataModal.datetime.slice(0, -5).split('T')[1]}</p>
+                      </div>
+                    </div>
+
+                    <div className="w-full flex min-h-10 max-h-auto justify-center items-start">
+                      <div className="w-1/6 p-1 font-semibold">
+                        <p>Detail :</p>
+                      </div>
+                      <div className="w-5/6 p-1 h-full overflow-y-auto bg-privy-dark-50 rounded-md border">
+                        <p>{dataModal.detail}</p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          )}
       </div>
     </>
   );
