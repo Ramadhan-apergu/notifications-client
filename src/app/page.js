@@ -71,6 +71,7 @@ export default function Home() {
     //     socket.disconnect();
     //   }
     // };
+    
   }, [searchValue, page, filter]);
 
   function nextPage() {
