@@ -183,8 +183,8 @@ export default function Home() {
                   </div>
                 )}
                 {!isLoading && (
-                 <div className="w-full h-full flex flex-col gap-3">
-                    <div className="w-full max-h-[500px]">
+                 <div className="w-full h-[500px] flex flex-col justify-between">
+                    <div className="w-full max-h-[450px]">
                       <NotificationTable data={tableList} onDataSend={handleDataFromTable}></NotificationTable>
                     </div>
                     <div className="w-full flex justify-center items-center gap-2 relative">
