@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import FetchNotifications from "@/modules/fetchNotifications";
 import io from "socket.io-client";
 import Loading from "@/components/Loading";
+import Cookies from "js-cookie";
 
 let socket;
 
@@ -25,6 +26,8 @@ export default function Home() {
   
   useEffect(() => {
     setIsLoading(true)
+
+    const filterCookie = Cookies.get('filter')
 
     // const fetchDataSocket = () => {
     //   try {
@@ -48,7 +51,13 @@ export default function Home() {
 
     const fetchData = async () => {
       try {
-        const filterValid = filter == 'all' ? '' : filter
+        let filterValid = filter == 'all' ? '' : filter
+
+        if (filterCookie) {
+          filterValid = filterCookie
+          setFilter(filterCookie)
+        }
+
         const result = await FetchNotifications.getAllErp(searchValue, page, filterValid);
         setData(result);
         setTableList(result.data);
@@ -56,6 +65,9 @@ export default function Home() {
         console.log(error);
       } finally {
         setIsLoading(false)
+        if (filterCookie) {
+          Cookies.remove('filter')
+        }
       }
     };
 
@@ -72,7 +84,7 @@ export default function Home() {
     //     socket.disconnect();
     //   }
     // };
-    
+
   }, [searchValue, page, filter]);
 
   function nextPage() {

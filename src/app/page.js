@@ -7,10 +7,13 @@ import { GoGear } from "react-icons/go";
 import { useState, useEffect } from 'react';
 import io from "socket.io-client";
 import FetchNotifications from '@/modules/fetchNotifications';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 let socket
 
 export default function Home() {
+  const router = useRouter()
   const [data, setData] = useState({})
   const [chartData, setChartData] = useState([
     { name: 'crm', value: 0, color: '#e42e2c' },
@@ -74,6 +77,11 @@ export default function Home() {
     
   }, []);
 
+  const handleRoute = (route, filter) => {
+    Cookies.set('filter', filter)
+    router.push(route)
+  }
+
   return (
     <>
       <div className="w-screen h-screen flex bg-privy-dark-50 text-privy-dark-950 relative">
@@ -89,21 +97,51 @@ export default function Home() {
                 <p className='text-sm xl:text-base text-privy-dark-600 font-normal'>The dashboard provides a clear, real-time snapshot of key metrics and performance data.</p>
               </div>
               <div className='w-full h-full flex justify-between items-center gap-4'>
-                <div className='rounded-md w-1/4 bg-white/70 px-5 py-8 flex-col flex justify-center items-start'>
-                  <p className='text-2xl xl:text-3xl font-semibold'>{data.total_data || '-'}</p>
-                  <p className='text-base xl:text-xl'>Total Data</p>
+                <div className='rounded-md w-1/4 bg-white/70 px-5 py-6 xl:py-9 flex-col flex justify-center items-start'>
+                  <p className='text-xl xl:text-3xl font-semibold'>{data.total_data || '-'}</p>
+                  <p className='text-sm xl:text-xl'>Total Data</p>
                 </div>
-                <div className='rounded-md w-1/4 bg-white/70 px-5 py-8 flex-col flex justify-center items-start'>
-                  <p className='text-2xl xl:text-3xl font-semibold'>{data.total_error || '-'}</p>
-                  <p className='text-base xl:text-xl'>Error</p>
+                <div className='rounded-md w-1/4 bg-white/70 flex gap-1 xl:gap-2 p-2 xl:p-5'>
+                  <div className='w-1/3 flex-col flex justify-center items-center'>
+                    <p className='text-xl xl:text-3xl font-semibold'>{data.total_error || '-'}</p>
+                    <p className='text-sm xl:text-xl'>Error</p>
+                  </div>
+                  <div className='w-2/3 flex flex-col text-sm xl:text-xl font-semibold justify-center items-center gap-2'>
+                    <div onClick={() => {handleRoute('/crm', 'error')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>CRM</span> {data.total_error_crm || '-'}</p>
+                    </div>
+                    <div onClick={() => {handleRoute('/erp', 'error')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>ERP</span> {data.total_error_erp || '-'}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className='rounded-md w-1/4 bg-white/70 px-5 py-8 flex-col flex justify-center items-start'>
-                  <p className='text-2xl xl:text-3xl font-semibold'>{data.total_waiting || '-'}</p>
-                  <p className='text-base xl:text-xl'>Waiting</p>
+                <div className='rounded-md w-1/4 bg-white/70 flex gap-1 xl:gap-2 p-2 xl:p-5'>
+                  <div className='w-1/3 flex-col flex justify-center items-center'>
+                    <p className='text-xl xl:text-3xl font-semibold'>{data.total_waiting || '-'}</p>
+                    <p className='text-sm xl:text-xl'>Waiting</p>
+                  </div>
+                  <div className='w-2/3 flex flex-col text-sm xl:text-xl font-semibold justify-center items-center gap-2'>
+                    <div onClick={() => {handleRoute('/crm', 'waiting')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>CRM</span> {data.total_waiting_crm || '-'}</p>
+                    </div>
+                    <div onClick={() => {handleRoute('/erp', 'waiting')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>ERP</span> {data.total_waiting_erp || '-'}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className='rounded-md w-1/4 bg-white/70 px-5 py-8 flex-col flex justify-center items-start'>
-                  <p className='text-2xl xl:text-3xl font-semibold'>{data.total_success || '-'}</p>
-                  <p className='text-base xl:text-xl'>Success</p>
+                <div className='rounded-md w-1/4 bg-white/70 flex gap-1 xl:gap-2 p-2 xl:p-5'>
+                  <div className='w-1/3 flex-col flex justify-center items-center'>
+                    <p className='text-xl xl:text-3xl font-semibold'>{data.total_success || '-'}</p>
+                    <p className='text-sm xl:text-xl'>Success</p>
+                  </div>
+                  <div className='w-2/3 flex flex-col text-sm xl:text-xl font-semibold justify-center items-center gap-2'>
+                    <div onClick={() => {handleRoute('/crm', 'success')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>CRM</span> {data.total_success_crm || '-'}</p>
+                    </div>
+                    <div onClick={() => {handleRoute('/erp', 'success')}} className='py-2 w-full bg-white/70 hover:bg-privy-red-600/50 cursor-pointer duration-100 flex justify-center items-center rounded-lg'>
+                      <p><span className='font-normal'>ERP</span> {data.total_success_erp || '-'}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -122,8 +160,8 @@ export default function Home() {
                     <p className='text-base xl:text-xl font-semibold'>CRM</p>
                   </div>
                   <div className='flex-col flex justify-center items-start'>
-                    <p className='text-2xl xl:text-3xl font-semibold'>{data.total_crm || '-'}</p>
-                    <p className='text-base xl:text-xl'>Total Data</p>
+                    <p className='text-xl xl:text-3xl font-semibold'>{data.total_crm || '-'}</p>
+                    <p className='text-sm xl:text-xl'>Total Data</p>
                   </div>
                 </div>
                 <div className='rounded-md w-1/2 bg-white/70 gap-3 px-5 py-8 flex'>
@@ -132,8 +170,8 @@ export default function Home() {
                     <p className='text-base xl:text-xl font-semibold'>ERP</p>
                   </div>
                   <div className='flex-col flex justify-center items-start'>
-                    <p className='text-2xl xl:text-3xl font-semibold'>{data.total_erp || '-'}</p>
-                    <p className='text-base xl:text-xl'>Total Data</p>
+                    <p className='text-xl xl:text-3xl font-semibold'>{data.total_erp || '-'}</p>
+                    <p className='text-sm xl:text-xl'>Total Data</p>
                   </div>
                 </div>
               </div>
